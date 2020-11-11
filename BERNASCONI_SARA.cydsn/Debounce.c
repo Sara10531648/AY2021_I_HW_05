@@ -10,10 +10,13 @@
  * ========================================
 */
 #include "Debounce.h"
-  
-    CY_ISR(Button_ISR)
+ extern uint8 Freq;
+CY_ISR(Button_ISR)
     {
    //variabile che tiene conto di pressione tasto
-        
+     if (Freq<6)
+    Freq++;
+    else
+    Freq=1;
      }   
 /* [] END OF FILE */
