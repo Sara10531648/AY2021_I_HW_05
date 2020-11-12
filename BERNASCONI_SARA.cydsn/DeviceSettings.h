@@ -9,10 +9,15 @@
  *
  * ========================================
 */
-#ifndef __INTERRUPT_ROUTINES_H
-    #define __INTERRUPT_ROUTINES_H
-    #include "project.h"
-    CY_ISR_PROTO(Button_ISR);
-    volatile uint8 Flag;
+#ifndef __DEVICE_SETTINGS_H__
+    #define __DEVICE_SETTINGS_H__
+    //function to set Hogh Resolution mode
+    void HRMode();
+    //function to set initial frequency on the device
+    void SetFreq ();
+    
+    
+    
+    
 #endif
 /* [] END OF FILE */

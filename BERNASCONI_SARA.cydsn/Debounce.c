@@ -18,5 +18,6 @@ CY_ISR(Button_ISR)
     Freq++;
     else
     Freq=1;
+    Flag=1;
      }   
 /* [] END OF FILE */
