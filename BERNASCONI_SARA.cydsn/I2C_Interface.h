@@ -13,8 +13,11 @@
     #define I2C_Interface_H
     
     #include "cytypes.h"
-    #include "ErrorCodes.h"
     
+    typedef enum {
+        NO_ERROR,           ///< No error generated
+        ERROR               ///< Error generated
+    } ErrorCode;
     /** \brief Start the I2C peripheral.
     *   
     *   This function starts the I2C peripheral so that it is ready to work.

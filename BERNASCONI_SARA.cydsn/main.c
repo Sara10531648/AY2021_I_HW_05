@@ -18,117 +18,100 @@
 #include "Define.h"
 
 
-
 int main(void)
 {
      CyGlobalIntEnable; 
     /* Enable global interrupts. */
     DEBOUNCE_ISR_StartEx(Button_ISR); 
-    //EPROM START
-    EEPROM_Start();
-    //READ AT 0X0000 ADDRESS 
-    Freq=EEPROM_ReadByte(0x0000);
     
-    
+    //Start of components
     I2C_Peripheral_Start();
     UART_Deb_Start();
-   
-    CyDelay(5); //"The boot procedure is complete about 5 milliseconds after device power-up."
+    EEPROM_Start();
+    //Copy the last sampling frequency saved in EEPROM 
+    Freq=EEPROM_ReadByte(EEPROM_ADDRESS_FREQUENCY);
     
+    //If no valid frequency has been saved in EEPROM, set initial Frequency at 1Hz
     if( Freq<1 || Freq>6)
     {
         Freq=1;
-        
     }
     
-    
-    
-    //SETTING HIGH RESOLUTION MODE
-    HRMode();
+    //SETTING HIGH RESOLUTION MODE & FS
+    ModeSettings();
     //SET INITIAL FREQUENCY
     SetFreq();
-     
- 
-        // Initializing isr flag
+   
+    // Initializing isr flag
     Flag=0;
     
-   
-  uint8 statusreg;
+    //Variables to take, convert and otuput Data
+    uint8 statusreg;
     uint8_t header = 0xA0;
     uint8_t footer = 0xC0;
     uint8_t OutArray [1+OUT_DATA+1];
     OutArray[0] = header;
     OutArray[7] = footer;
     int16 dirtytrick = 1000;
-    int16 outconv[3];
-    float P[3];
-    uint8_t RData[6];
-
+    int16 OutConv[3];
+    uint8_t NewData[6];
     int16 OutX;
     int16 OutY;
     int16 OutZ;
+    int i;
     
     for(;;)
     {   
-
-    if (Flag)
-    { 
-        Flag=0;
-        EEPROM_UpdateTemperature();
-         //WRITE AT 0X0000 A NEW VALUE
-        EEPROM_WriteByte(Freq,0x0000);
-        SetFreq();
-    }
-    
-   I2C_Peripheral_ReadRegister(LIS3DH_DEVICE_ADDRESS,
-                                                  LIS3DH_STATUS_REG, 
-                                                  &statusreg);
-    if (statusreg & 0x08)
-{
-
-    
-
-    I2C_Peripheral_ReadRegisterMulti(LIS3DH_DEVICE_ADDRESS,
-                                                LIS3DH_OUT_X_L,
-                                                6,
-                                                RData);
+        //If the button has been pressed the Flag goes to 1
+        if (Flag)
+        { 
+            Flag=0;
+            EEPROM_UpdateTemperature();
+            //Write new frequency value in EEPROM
+            EEPROM_WriteByte(Freq,EEPROM_ADDRESS_FREQUENCY);
+            //Set new frequency in device register
+            SetFreq();
+        }
         
-            //CONVERSIONE PER OTTENERE I FLOATING IN OUTPUT
-            OutX = (int16)((RData[0] | (RData[1]<<8)))>>4;
-            OutY = (int16)((RData[2] | (RData[3]<<8)))>>4;
-            OutZ = (int16)((RData[4] | (RData[5]<<8)))>>4;
+        //Read status register to understand when there is a new set of available Data
+        I2C_Peripheral_ReadRegister(LIS3DH_DEVICE_ADDRESS,
+                                    LIS3DH_STATUS_REG, 
+                                    &statusreg);
+        //If new Data available the 4th bit goes to 1
+        if (statusreg & 0x08)
+        {
+            //MultiRead of register OUT_X_L,OUT_X_H,OUT_Y_L,OUT_Y_H,OUT_Z_L,OUT_Z_H
+            //Save NewData in array
+            I2C_Peripheral_ReadRegisterMulti(LIS3DH_DEVICE_ADDRESS,
+                                             LIS3DH_OUT_X_L,
+                                             6,
+                                             NewData);
+        
+            //Reconstruction of Data into 16 bit variables, considering samping in 12 bit
+            OutX = (int16)((NewData[0] | (NewData[1]<<8)))>>4;
+            OutY = (int16)((NewData[2] | (NewData[3]<<8)))>>4;
+            OutZ = (int16)((NewData[4] | (NewData[5]<<8)))>>4;
             
-            P[0]=(conversion*OutX);
-            P[1]=(conversion*OutY);
-            P[2]=(conversion*OutZ);
+            //Take data and multiply for sensitivity and g to obtain data in m/s^2
+            //multiply data per 1000 to obtain an integer
+            OutConv[0]=(int16)(conversion*OutX* dirtytrick);
+            OutConv[1]=(int16)(conversion*OutY* dirtytrick);
+            OutConv[2]=(int16)(conversion*OutZ* dirtytrick);
             
-            
-            
-            
-            outconv[0]=(int16)(P[0]* dirtytrick);
-            outconv[1]=(int16)(P[1]* dirtytrick);
-            outconv[2]=(int16)(P[2]* dirtytrick);
-            
+            //String to verify output in Coolterm
             //sprintf(message, "%d\n", outconv[2]);
-           //UART_Deb_PutString(message);
+            //UART_Deb_PutString(message);
            
-         
-            OutArray[1] = (uint8_t)(outconv[0] & 0xFF);
-            OutArray[2] = (uint8_t)((outconv[0]>> 8 )&0XFF);
-            OutArray[3] = (uint8_t)(outconv[1] & 0xFF);
-            OutArray[4] = (uint8_t)((outconv[1] >> 8)&0XFF);
-            OutArray[5] = (uint8_t)(outconv[2] & 0xFF);
-            OutArray[6] = (uint8_t)((outconv[2]>> 8)&0XFF);
-            
-            
-            
-            
-            UART_Deb_PutArray(OutArray, 8);
-       
-        
-        
-    }
-       
+            //Packet for sanding via Uart,2 byte for each axis
+            for(i=0;i<=2;i++)
+            {
+                OutArray[i*2+1] = (uint8_t)(OutConv[i] & 0xFF);
+                OutArray[i*2+2] = (uint8_t)((OutConv[i]>> 8 )&0XFF);
+            }
+
+            //Output the array, 6 bytes of Data+Header+Footer
+            UART_Deb_PutArray(OutArray,1+OUT_DATA+1);
+        }
     }
 }
     
