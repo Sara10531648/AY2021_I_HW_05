@@ -39,7 +39,6 @@
 <wrkspc_dependency project="ANDRIOTTO_LUCA.cydsn\ANDRIOTTO_LUCA.cyprj" dependency="..\..\..\Documents\PSoC Creator\AnnotationLibrary\AnnotationLibrary_lib\AnnotationLibrary_lib.cylib\AnnotationLibrary_lib.cyprj" />
 <wrkspc_dependency project="ARRIGONI_PIERGIORGIO.cydsn\ARRIGONI_PIERGIORGIO.cyprj" dependency="..\..\..\Documents\PSoC Creator\AnnotationLibrary\AnnotationLibrary_lib\AnnotationLibrary_lib.cylib\AnnotationLibrary_lib.cyprj" />
 <wrkspc_dependency project="BARLETTA_NUNZIO.cydsn\BARLETTA_NUNZIO.cyprj" dependency="..\..\..\Documents\PSoC Creator\AnnotationLibrary\AnnotationLibrary_lib\AnnotationLibrary_lib.cylib\AnnotationLibrary_lib.cyprj" />
-<wrkspc_dependency project="BERNASCONI_SARA.cydsn\BERNASCONI_SARA.cyprj" dependency="..\..\..\Documents\PSoC Creator\AnnotationLibrary\AnnotationLibrary_lib\AnnotationLibrary_lib.cylib\AnnotationLibrary_lib.cyprj" />
 <wrkspc_dependency project="BERNASCONI_SARA.cydsn\BERNASCONI_SARA.cyprj" dependency="${CyRoot}\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj" />
 <wrkspc_dependency project="BERNASCONI_SARA.cydsn\BERNASCONI_SARA.cyprj" dependency="${CyRoot}\psoc\content\default\CyReferenceLibrary\CyReferenceLibrary.cylib\CyReferenceLibrary.cyprj" />
 <wrkspc_dependency project="BERNASCONI_SARA.cydsn\BERNASCONI_SARA.cyprj" dependency="..\PSoC_AnnotationLibrary\AnnotationLibrary\AnnotationLibrary_lib\AnnotationLibrary_lib.cylib\AnnotationLibrary_lib.cyprj" />

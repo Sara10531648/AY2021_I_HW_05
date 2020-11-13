@@ -251,11 +251,13 @@
   <Data key="DataVersionKey" value="2" />
   <Group key="DWRInstGuidMapping">
     <Group key="Pin">
-      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="Push_Button" />
+      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="PushButton" />
       <Data key="24ef393c-eced-46c3-a993-d2433faf0365" value="SDA_2" />
+      <Data key="075bd775-d711-4645-8c27-3ef23f74c06d" value="Tx_1" />
       <Data key="684dceea-ba69-443e-a182-0ae84dbfd049" value="RST_1" />
       <Data key="980e84b8-45df-4d69-89ad-bc60a3a979b6" value="SCL_2" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="Rx_1" />
+      <Data key="e1515782-9347-4339-9a73-df2a0dec69d5" value="Rx_1" />
       <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="Tx_1" />
     </Group>
   </Group>
@@ -3353,12 +3355,22 @@
         <Data key="Port Format" value="12,1" />
       </Group>
     </Group>
+    <Group key="075bd775-d711-4645-8c27-3ef23f74c06d">
+      <Group key="0">
+        <Data key="Port Format" value="12,7" />
+      </Group>
+    </Group>
     <Group key="980e84b8-45df-4d69-89ad-bc60a3a979b6">
       <Group key="0">
         <Data key="Port Format" value="12,0" />
       </Group>
     </Group>
     <Group key="1425177d-0d0e-4468-8bcc-e638e5509a9b">
+      <Group key="0">
+        <Data key="Port Format" value="12,6" />
+      </Group>
+    </Group>
+    <Group key="e1515782-9347-4339-9a73-df2a0dec69d5">
       <Group key="0">
         <Data key="Port Format" value="12,6" />
       </Group>

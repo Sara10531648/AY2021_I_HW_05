@@ -14,5 +14,6 @@
     #include "project.h"
     CY_ISR_PROTO(Button_ISR);
     volatile uint8 Flag;
+    uint8 Freq;
 #endif
 /* [] END OF FILE */
